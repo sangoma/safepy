@@ -15,11 +15,19 @@ class APIError(requests.HTTPError):
 
 class Reason(object):
     def __init__(self, reason):
-        self.name = reason.get('obj_name')
-        self.obj = reason['obj_type']
-        self.description = reason['description']
-        self.module = reason['module']
-        self.url = reason.get('url')
+        # if it's a string, just treat it as the error description
+        if isinstance(reason, six.string_types):
+            self.name = ''
+            self.obj = ''
+            self.description = reason
+            self.module = ''
+            self.url = ''
+        else:
+            self.name = reason.get('obj_name')
+            self.obj = reason['obj_type']
+            self.description = reason['description']
+            self.module = reason['module']
+            self.url = reason.get('url')
 
     def __str__(self):
         return self.description
